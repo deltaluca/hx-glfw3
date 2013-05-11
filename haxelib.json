@@ -1,0 +1,13 @@
+{
+    "name":         "glfw3",
+    "url":          "https://github.com/deltaluca/hx-glfw3",
+    "license":      "MIT",
+    "tags":         ["cpp"],
+    "description":  "Hxcpp bindings to GLFW 3.0",
+    "version":      "0.1.0",
+    "releasenote":  "First release on new haxelib, perfectly functional.",
+    "contributors": ["deltaluca"],
+    "dependencies": {
+        "hxcpp": ""
+    }
+}

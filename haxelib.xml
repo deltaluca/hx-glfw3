@@ -1,8 +1,0 @@
-<project name="glfw3" url="https://github.com/deltaluca/hx-glfw3" license="MIT">
-	<depends name="hxcpp"/>
-
-	<user name="deltaluca"/>
-	<tag v="cpp"/>
-	<description>hxcpp bindings to GLFW 3.0</description>
-	<version name="0.1.0">Large majority of the API bound and working, tested on linux64.</version>
-</project>
