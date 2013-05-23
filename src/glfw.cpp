@@ -515,8 +515,9 @@ CONST(MOUSE_BUTTON_RIGHT);
 CONST(MOUSE_BUTTON_MIDDLE);
 
 CONST(MOD_SHIFT);
-CONST(MOD_CTRL);
+CONST(MOD_CONTROL);
 CONST(MOD_ALT);
+CONST(MOD_SUPER);
 
 extern "C" void glfw_allocateKinds() {
     k_Window = alloc_kind();
