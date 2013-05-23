@@ -6,8 +6,8 @@ all: main
 lib:
 	haxelib run hxcpp Build.xml -DHXCPP_M64
 
-main: haxelib Main.hx
-	haxe -main Main.hx -cpp bin -D HXCPP_M64 -lib glfw3 -lib ogl
+main:
+	haxe -main Main.hx -cpp bin -D HXCPP_M64 -lib ogl
 
 .PHONY: haxelib
 haxelib: lib

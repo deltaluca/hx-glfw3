@@ -135,6 +135,8 @@ class GLFW implements GLConsts implements GLProcs {
         return if (cb == null) null else function (a:A) cb(w, a);
     static inline function wrap2<A,B>(w:Window, cb:Null<Window->A->B->Void>):Null<A->B->Void>
         return if (cb == null) null else function (a:A, b:B) cb(w, a, b);
+    static inline function wrap3<A,B,C>(w:Window, cb:Null<Window->A->B->C->Void>):Null<A->B->C->Void>
+        return if (cb == null) null else function (a:A, b:B, c:C) cb(w, a, b, c);
 
     @:GLProc function setWindowPosCallback(window:Window, cb:Null<Window->Int->Int->Void>):Void
         load("setWindowPosCallback", 2)(NativeBinding.native(window), wrap2(window, cb));
