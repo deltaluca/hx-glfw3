@@ -329,17 +329,17 @@ GLFWMULTIDECLARE(setMouseButtonCallback);
 GLFWMULTIDECLARE(setScrollCallback);
 GLFWMULTIDECLARE(setCursorPosCallback);
 GLFWMULTIDECLARE(setCursorEnterCallback);
-void bound_setKeyCallback(GLFWwindow* v, int key, int action) {
+void bound_setKeyCallback(GLFWwindow* v, int key, int action, int mods) {
     value cb = GLFWMULTIFUNC(setKeyCallback, v);
-    val_call2(cb, alloc<int>(key), alloc<int>(action));
+    val_call3(cb, alloc<int>(key), alloc<int>(action), alloc<int>(mods));
 }
 void bound_setCharCallback(GLFWwindow* v, unsigned int character) {
     value cb = GLFWMULTIFUNC(setCharCallback, v);
     val_call1(cb, alloc<int>(character));
 }
-void bound_setMouseButtonCallback(GLFWwindow* v, int button, int pressed) {
+void bound_setMouseButtonCallback(GLFWwindow* v, int button, int pressed, int mods) {
     value cb = GLFWMULTIFUNC(setMouseButtonCallback, v);
-    val_call2(cb, alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS));
+    val_call3(cb, alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS), alloc<int>(mods));
 }
 void bound_setScrollCallback(GLFWwindow* v, double x, double y) {
     value cb = GLFWMULTIFUNC(setScrollCallback, v);
@@ -513,6 +513,10 @@ CONST(MOUSE_BUTTON_LAST);
 CONST(MOUSE_BUTTON_LEFT);
 CONST(MOUSE_BUTTON_RIGHT);
 CONST(MOUSE_BUTTON_MIDDLE);
+
+CONST(MOD_SHIFT);
+CONST(MOD_CTRL);
+CONST(MOD_ALT);
 
 extern "C" void glfw_allocateKinds() {
     k_Window = alloc_kind();

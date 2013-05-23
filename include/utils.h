@@ -3,12 +3,10 @@
 #define UTILS_H
 #include <hx/CFFI.h>
 #include <GL/glew.h>
-#include <GL/glfw3.h>
-
+#include <GLFW/glfw3.h>
 
 
 typedef const char* string;
-
 
 
 // Parameterised allocs

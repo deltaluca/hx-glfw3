@@ -160,12 +160,12 @@ class GLFW implements GLConsts implements GLProcs {
     }
     @:GLProc function setCursorPos(window:Window, x:Float, y:Float):Void;
 
-    @:GLProc function setKeyCallback(window:Window, cb:Null<Window->Int->Int->Void>):Void
-        load("setKeyCallback", 2)(NativeBinding.native(window), wrap2(window, cb));
+    @:GLProc function setKeyCallback(window:Window, cb:Null<Window->Int->Int->Int->Void>):Void
+        load("setKeyCallback", 2)(NativeBinding.native(window), wrap3(window, cb));
     @:GLProc function setCharCallback(window:Window, cb:Null<Window->Int->Void>):Void
         load("setCharCallback", 2)(NativeBinding.native(window), wrap1(window, cb));
-    @:GLProc function setMouseButtonCallback(window:Window, cb:Null<Window->Int->Bool->Void>):Void
-        load("setMouseButtonCallback", 2)(NativeBinding.native(window), wrap2(window, cb));
+    @:GLProc function setMouseButtonCallback(window:Window, cb:Null<Window->Int->Bool->Int->Void>):Void
+        load("setMouseButtonCallback", 2)(NativeBinding.native(window), wrap3(window, cb));
     @:GLProc function setScrollCallback(window:Window, cb:Null<Window->Float->Float->Void>):Void
         load("setScrollCallback", 2)(NativeBinding.native(window), wrap2(window, cb));
     @:GLProc function setCursorPosCallback(window:Window, cb:Null<Window->Float->Float->Void>):Void
@@ -314,4 +314,9 @@ class GLFW implements GLConsts implements GLProcs {
     @:GLConst var MOUSE_BUTTON_LEFT;
     @:GLConst var MOUSE_BUTTON_RIGHT;
     @:GLConst var MOUSE_BUTTON_MIDDLE;
+
+    @:GLConst var MOD_SHIFT;
+    @:GLConst var MOD_CTRL;
+    @:GLConst var MOD_ALT;
+
 }
