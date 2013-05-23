@@ -318,7 +318,8 @@ class GLFW implements GLConsts implements GLProcs {
     @:GLConst var MOUSE_BUTTON_MIDDLE;
 
     @:GLConst var MOD_SHIFT;
-    @:GLConst var MOD_CTRL;
+    @:GLConst var MOD_CONTROL;
     @:GLConst var MOD_ALT;
+    @:GLConst var MOD_SUPER;
 
 }
