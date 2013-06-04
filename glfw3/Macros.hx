@@ -3,63 +3,6 @@ package glfw3;
 import haxe.macro.Context;
 import haxe.macro.Expr;
 
-@:autoBuild(glfw3.GLConstsImpl.run())
-@:remove extern interface GLConsts {}
-
-//
-// @:GLConst var X;
-//
-// replaced by
-//
-// public static var X(get,never):Int;
-// static inline function get_X() return load("X", 0)();
-//
-class GLConstsImpl {
-#if macro
-    static function isConst(f:Metadata) {
-        for (m in f) {
-            if (m.name == ":GLConst") return true;
-        }
-        return false;
-    }
-
-    public static function run() {
-        var fields = Context.getBuildFields();
-        for (f in fields) {
-            if (!isConst(f.meta)) {
-                continue;
-            }
-
-            switch (f.kind) {
-            case FVar(_, _):
-                f.kind = FProp("get", "never", macro :Int, null);
-                f.access.push(AStatic);
-                f.access.push(APublic);
-
-                var kind = FFun({
-                    ret:    macro :Int,
-                    params: [],
-                    args:   [],
-                    expr:   macro return load($v{f.name}, 0)()
-                });
-                fields.push({
-                    pos:    f.pos,
-                    name:   "get_"+f.name,
-                    meta:   [],
-                    kind:   kind,
-                    doc:    null,
-                    access: [AStatic, AInline]
-                });
-            default:
-                Context.warning("@:GLConst used on non-field type", f.pos);
-            }
-        }
-
-        return fields;
-    }
-#end
-}
-
 
 @:autoBuild(glfw3.GLProcsImpl.run())
 @:remove extern interface GLProcs {}

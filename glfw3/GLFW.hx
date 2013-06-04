@@ -25,7 +25,7 @@ abstract Monitor(NativeBinding) to NativeBinding {
     @:op(A!=B) public static inline function ne(a:Monitor, b:Monitor):Bool return untyped a.nativeObject != b.nativeObject;
 }
 
-class GLFW implements GLConsts implements GLProcs {
+class GLFW implements GLProcs {
     @:allow(glfw3)
     static inline function load(n:String, p:Int):Dynamic
         return Lib.load("glfw3","hx_glfw_"+n, p);
