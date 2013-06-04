@@ -1,4 +1,4 @@
-Haxe-c++ bindings for GLFW 3.0 (https://github.com/elmindreda/glfw)
+Haxe-c++ bindings for GLFW 3.0 (https://github.com/deltaluca/glfw) [stable-fork]
 
 The library is not 100% bound, with support listed below together with any slight API changes for Haxe.
 
@@ -22,6 +22,8 @@ eg: ```GLFW_RED_BITS``` -> ```GLFW.RED_BITS : Int```
 * ~~```glfwSetClipboardString```~~
 * ~~```glfwGetClipboardString```~~
 
+(Consider waneck/systools for clipboard support and more)
+
 ##### Context Handling
 * ```GLFW.makeContextCurrent : Window -> Void```
 * ```GLFW.getCurrentContext : Void -> Window```
@@ -32,8 +34,8 @@ eg: ```GLFW_RED_BITS``` -> ```GLFW.RED_BITS : Int```
 
 ##### Error Handing
 * ```GLFW.setErrorCallback : Null<Int -> String -> Void> -> Void```
- 
-##### Gamma Ramp Support 
+
+##### Gamma Ramp Support
 * ~~```glfwSetGamma```~~
 * ~~```glfwGetGammaRamp```~~
 * ~~```glfwSetGammaRamp```~~
@@ -43,7 +45,7 @@ eg: ```GLFW_RED_BITS``` -> ```GLFW.RED_BITS : Int```
 * ```GLFW.terminate : Void->Void```
 * ~~```glfwGetVersion```~~
 * ~~```glfwGetVersionString```~~
- 
+
 ##### Input Handling
 * ~~```glfwGetInputMode```~~
 * ~~```glfwSetInputMode```~~
@@ -51,7 +53,7 @@ eg: ```GLFW_RED_BITS``` -> ```GLFW.RED_BITS : Int```
 * ```GLFW.getMouseButton : Window -> button:Int -> pressed:Bool```
 * ```GLFW.getCursorPos : Window -> {x:Float, y:Float}```
 * ```GLFW.setCursorPos : Window -> x:Float -> y:Float -> Void```
-* ```GLFW.setKeyCallback : Window -> Null<Window -> key:Int -> state:Int -> Void> -> Void```
+* ```GLFW.setKeyCallback : Window -> Null<Window -> key:Int -> state:Int -> modifier:Int -> Void> -> Void```
 * ```GLFW.setCharCallback : Window -> Null<Window -> char:Int -> Void> -> Void```
 * ```GLFW.setMouseButtonCallback : Window -> Null<Window -> button:Int -> pressed:Bool -> Void> -> Void```
 * ```GLFW.setCursorPosCallback : Window -> Null<Window -> x:Float -> y:Float -> Void> -> Void```
@@ -61,7 +63,7 @@ eg: ```GLFW_RED_BITS``` -> ```GLFW.RED_BITS : Int```
 * ~~```glfwGetJoystickAxes```~~
 * ~~```glfwGetJoystickButtons```~~
 * ~~```glfwGetJoystickName```~~
- 
+
 ##### Monitor Handling
 * ```GLFW.getMonitors : Void -> Array<Monitor>```
 * ```GLFW.getPrimaryMonitor : Void -> Monitor```
