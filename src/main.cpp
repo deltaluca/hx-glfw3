@@ -1,6 +1,4 @@
 #define IMPLEMENT_API
-#include <hx/CFFI.h>
-
 #include "glfw.h"
 
 extern "C" void hx_glfw3_entry() {

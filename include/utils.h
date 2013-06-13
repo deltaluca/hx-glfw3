@@ -2,9 +2,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include <hx/CFFI.h>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 
 typedef const char* string;
 
@@ -104,7 +101,7 @@ void finaliser(value v) {
         if (val_is_null(cbfun)) \
             glfw##G(NULL); \
         else { \
-            val_check_function(cbfun, P); \
+            /*val_check_function(cbfun, P);*/ \
             hx_##N = new AutoGCRoot(cbfun); \
             glfw##G(bound_##N); \
         } \

@@ -1,4 +1,4 @@
-#include <hx/CFFI.h>
+#include "glfw.h"
 #include "utils.h"
 #define CONST(N) PCONST(glfw, GLFW, N)
 
@@ -110,12 +110,12 @@ DEFINE_PRIM(hx_glfw_windowHint,         2);
 
 
 //
-// glfwGetWindowParam
+// glfwGetWindowAttrib
 //
-value hx_glfw_getWindowParam(value v, value param) {
-    return alloc<int>(glfwGetWindowParam((GLFWwindow*)val_data(v), val_get<int>(param)));
+value hx_glfw_getWindowAttrib(value v, value param) {
+    return alloc<int>(glfwGetWindowAttrib((GLFWwindow*)val_data(v), val_get<int>(param)));
 }
-DEFINE_PRIM(hx_glfw_getWindowParam, 2);
+DEFINE_PRIM(hx_glfw_getWindowAttrib, 2);
 
 //
 //glfwGetWindowPos
@@ -281,9 +281,14 @@ GLFWMULTIDECLARE(setMouseButtonCallback);
 GLFWMULTIDECLARE(setScrollCallback);
 GLFWMULTIDECLARE(setCursorPosCallback);
 GLFWMULTIDECLARE(setCursorEnterCallback);
-void bound_setKeyCallback(GLFWwindow* v, int key, int action, int mods) {
+void bound_setKeyCallback(GLFWwindow* v, int key, int scancode, int action, int mods) {
     value cb = GLFWMULTIFUNC(setKeyCallback, v);
-    val_call3(cb, alloc<int>(key), alloc<int>(action), alloc<int>(mods));
+    value args[4];
+    args[0] = alloc<int>(key);
+    args[1] = alloc<int>(scancode);
+    args[2] = alloc<int>(action);
+    args[3] = alloc<int>(mods);
+    val_callN(cb, args, 4);
 }
 void bound_setCharCallback(GLFWwindow* v, unsigned int character) {
     value cb = GLFWMULTIFUNC(setCharCallback, v);

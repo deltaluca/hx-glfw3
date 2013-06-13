@@ -105,7 +105,7 @@ class GLFW implements GLProcs {
     public static inline var OPENGL_CORE_PROFILE    = 0x00000001;
     public static inline var OPENGL_COMPAT_PROFILE  = 0x00000002;
 
-    @:GLProc function getWindowParam(window:Window, param:Int):Int;
+    @:GLProc function getWindowAttrib(window:Window, param:Int):Int;
 
     @:GLProc function getWindowPos(window:Window):{x:Int, y:Int} {
         var vals = [0,0];
@@ -140,6 +140,8 @@ class GLFW implements GLProcs {
         return if (cb == null) null else function (a:A, b:B) cb(w, a, b);
     static inline function wrap3<A,B,C>(w:Window, cb:Null<Window->A->B->C->Void>):Null<A->B->C->Void>
         return if (cb == null) null else function (a:A, b:B, c:C) cb(w, a, b, c);
+    static inline function wrap4<A,B,C,D>(w:Window, cb:Null<Window->A->B->C->D->Void>):Null<A->B->C->D->Void>
+        return if (cb == null) null else function (a:A, b:B, c:C, d:D) cb(w, a, b, c, d);
 
     @:GLProc function setWindowPosCallback(window:Window, cb:Null<Window->Int->Int->Void>):Void
         load("setWindowPosCallback", 2)(NativeBinding.native(window), wrap2(window, cb));
@@ -165,8 +167,8 @@ class GLFW implements GLProcs {
     }
     @:GLProc function setCursorPos(window:Window, x:Float, y:Float):Void;
 
-    @:GLProc function setKeyCallback(window:Window, cb:Null<Window->Int->Int->Int->Void>):Void
-        load("setKeyCallback", 2)(NativeBinding.native(window), wrap3(window, cb));
+    @:GLProc function setKeyCallback(window:Window, cb:Null<Window->Int->Int->Int->Int->Void>):Void
+        load("setKeyCallback", 2)(NativeBinding.native(window), wrap4(window, cb));
     @:GLProc function setCharCallback(window:Window, cb:Null<Window->Int->Void>):Void
         load("setCharCallback", 2)(NativeBinding.native(window), wrap1(window, cb));
     @:GLProc function setMouseButtonCallback(window:Window, cb:Null<Window->Int->Bool->Int->Void>):Void
