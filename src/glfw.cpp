@@ -20,8 +20,8 @@ GLFWCALLBACK(setErrorCallback, SetErrorCallback, 2);
 // glfwInit
 // glfwTerminate
 //
-value hx_glfw_init() {
-    return alloc<int>(glfwInit());
+void hx_glfw_init() {
+    glfwInit();
 }
 void hx_glfw_terminate() {
     glfwTerminate();

@@ -18,7 +18,6 @@
 
     <files id="common">
         <compilerflag value="-Iinclude"/>
-        <compilerflag value="-I${HXCPP}/runtime/libs/nekoapi"/>
 
         <file name="src/main.cpp"/>
         <file name="src/glfw.cpp"/>
