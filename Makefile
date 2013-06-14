@@ -1,5 +1,11 @@
-all: main
+all:
+	rm -rf obj bin all_objs ndll
+	make lib
+	make haxelib
+	make main
+	make nekomain
 	./bin/Main
+	neko Main.n
 #	cd bin && neko Main.n
 
 .PHONY: lib
@@ -8,6 +14,9 @@ lib:
 
 main:
 	haxe -main Main.hx -cpp bin -D HXCPP_M64 -lib ogl
+
+nekomain:
+	haxe -main Main.hx -neko Main.n -lib glfw3
 
 .PHONY: haxelib
 haxelib: lib

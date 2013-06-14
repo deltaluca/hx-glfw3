@@ -1,4 +1,5 @@
 #define IMPLEMENT_API
+#define NEKO_COMPATIBLE
 #include "glfw.h"
 
 extern "C" void hx_glfw3_entry() {

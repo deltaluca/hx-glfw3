@@ -14,8 +14,7 @@ class NativeBinding {
         return if (x == null) null else new NativeBinding(x);
     }
 
-    @:allow(glfw3)
-    static inline function native(object:Null<NativeBinding>):Null<Dynamic> {
+    public static inline function native(object:Null<NativeBinding>):Null<Dynamic> {
         return if (object == null) null else object.nativeObject;
     }
 

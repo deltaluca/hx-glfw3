@@ -2,6 +2,13 @@
 #include "utils.h"
 #define CONST(N) PCONST(glfw, GLFW, N)
 
+#define GLFWCALLBACK(N, G) \
+    value hx_glfw_##N(value window, value cbfun) { \
+        glfw##G((GLFWwindow*)val_data(window), bound_##N, cbfun); \
+        return val_null; \
+    } \
+    DEFINE_PRIM(hx_glfw_##N, 1)
+
 DECLARE_KIND(k_Monitor);
 DECLARE_KIND(k_Window);
 DEFINE_KIND(k_Monitor);
@@ -10,21 +17,26 @@ DEFINE_KIND(k_Window);
 //
 // glfwSetErrorCallback
 //
-AutoGCRoot* hx_setErrorCallback = NULL;
-void bound_setErrorCallback(int error, const char* description) {
-    val_call2(hx_setErrorCallback->get(), alloc<int>(error), alloc<string>(description));
+extern "C" void bound_errorCallback(int error, const char* description, void* cb) {
+    val_call2((value)cb, alloc<int>(error), alloc<string>(description));
 }
-GLFWCALLBACK(setErrorCallback, SetErrorCallback, 2);
+value hx_glfw_setErrorCallback(value cb) {
+    glfwSetErrorCallback(bound_errorCallback, cb);
+    return val_null;
+}
+DEFINE_PRIM(hx_glfw_setErrorCallback, 1);
 
 //
 // glfwInit
 // glfwTerminate
 //
-void hx_glfw_init() {
+value hx_glfw_init() {
     glfwInit();
+    return val_null;
 }
-void hx_glfw_terminate() {
+value hx_glfw_terminate() {
     glfwTerminate();
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_init,      0);
 DEFINE_PRIM(hx_glfw_terminate, 0);
@@ -34,7 +46,7 @@ DEFINE_PRIM(hx_glfw_terminate, 0);
 // glfwGetMonitors
 // glfwGetPrimaryMonitor
 //
-void hx_glfw_getMonitors(value out) {
+value hx_glfw_getMonitors(value out) {
     int count;
     GLFWmonitor** monitors = glfwGetMonitors(&count);
     val_array_set_size(out, count);
@@ -42,6 +54,7 @@ void hx_glfw_getMonitors(value out) {
         value v = alloc_abstract(k_Monitor, monitors[i]);
         val_array_set_i(out, i, v);
     }
+    return val_null;
 }
 value hx_glfw_getPrimaryMonitor() {
     GLFWmonitor* ptr = glfwGetPrimaryMonitor();
@@ -58,18 +71,21 @@ DEFINE_PRIM(hx_glfw_getPrimaryMonitor, 0);
 // glfwSwapBuffers
 // glfwSwapInterval
 //
-void hx_glfw_makeContextCurrent(value v) {
+value hx_glfw_makeContextCurrent(value v) {
     glfwMakeContextCurrent((GLFWwindow*)val_data(v));
+    return val_null;
 }
 value hx_glfw_getCurrentContext() {
     GLFWwindow* ptr = glfwGetCurrentContext();
     return ptr == NULL ? val_null : alloc_abstract(k_Window, ptr);
 }
-void hx_glfw_swapBuffers(value v) {
+value hx_glfw_swapBuffers(value v) {
     glfwSwapBuffers((GLFWwindow*)val_data(v));
+    return val_null;
 }
-void hx_glfw_swapInterval(value interval) {
+value hx_glfw_swapInterval(value interval) {
     glfwSwapInterval(val_get<int>(interval));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_makeContextCurrent, 1);
 DEFINE_PRIM(hx_glfw_getCurrentContext,  0);
@@ -86,9 +102,10 @@ value hx_glfw_createWindow(value width, value height, value title, value monitor
     value v = alloc_abstract(k_Window, ptr);
     return v;
 }
-void hx_glfw_destroyWindow(value v) {
+value hx_glfw_destroyWindow(value v) {
     GLFWwindow* ptr = (GLFWwindow*)val_data(v);
     glfwDestroyWindow(ptr);
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_createWindow,  5);
 DEFINE_PRIM(hx_glfw_destroyWindow, 1);
@@ -99,11 +116,13 @@ DEFINE_PRIM(hx_glfw_destroyWindow, 1);
 // glfwWindowHint
 //
 
-void hx_glfw_defaultWindowHints() {
+value hx_glfw_defaultWindowHints() {
     glfwDefaultWindowHints();
+    return val_null;
 }
-void hx_glfw_windowHint(value target, value hint) {
+value hx_glfw_windowHint(value target, value hint) {
     glfwWindowHint(val_get<int>(target), val_get<int>(hint));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_defaultWindowHints, 0);
 DEFINE_PRIM(hx_glfw_windowHint,         2);
@@ -124,22 +143,27 @@ DEFINE_PRIM(hx_glfw_getWindowAttrib, 2);
 //glfwSetWindowSize
 //glfwSetWindowTitle
 //
-void hx_glfw_getWindowPos(value v, value size) {
+value hx_glfw_getWindowPos(value v, value size) {
     int* vals = val_array_int(size);
     glfwGetWindowPos((GLFWwindow*)val_data(v), vals, vals+1);
+    return val_null;
 }
-void hx_glfw_getWindowSize(value v, value size) {
+value hx_glfw_getWindowSize(value v, value size) {
     int* vals = val_array_int(size);
     glfwGetWindowSize((GLFWwindow*)val_data(v), vals, vals+1);
+    return val_null;
 }
-void hx_glfw_setWindowPos(value v, value x, value y) {
+value hx_glfw_setWindowPos(value v, value x, value y) {
     glfwSetWindowPos((GLFWwindow*)val_data(v), val_get<int>(x), val_get<int>(y));
+    return val_null;
 }
-void hx_glfw_setWindowSize(value v, value width, value height) {
+value hx_glfw_setWindowSize(value v, value width, value height) {
     glfwSetWindowSize((GLFWwindow*)val_data(v), val_get<int>(width), val_get<int>(height));
+    return val_null;
 }
-void hx_glfw_setWindowTitle(value v, value title) {
+value hx_glfw_setWindowTitle(value v, value title) {
     glfwSetWindowTitle((GLFWwindow*)val_data(v), val_get<string>(title));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_getWindowPos,   2);
 DEFINE_PRIM(hx_glfw_getWindowSize,  2);
@@ -153,17 +177,21 @@ DEFINE_PRIM(hx_glfw_setWindowTitle, 2);
 // glfwIconifyWindow
 // glfwRestoreWindow
 //
-void hx_glfw_hideWindow(value v) {
+value hx_glfw_hideWindow(value v) {
     glfwHideWindow((GLFWwindow*)val_data(v));
+    return val_null;
 }
-void hx_glfw_showWindow(value v) {
+value hx_glfw_showWindow(value v) {
     glfwShowWindow((GLFWwindow*)val_data(v));
+    return val_null;
 }
-void hx_glfw_iconifyWindow(value v) {
+value hx_glfw_iconifyWindow(value v) {
     glfwIconifyWindow((GLFWwindow*)val_data(v));
+    return val_null;
 }
-void hx_glfw_restoreWindow(value v) {
+value hx_glfw_restoreWindow(value v) {
     glfwRestoreWindow((GLFWwindow*)val_data(v));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_hideWindow,    1);
 DEFINE_PRIM(hx_glfw_showWindow,    1);
@@ -177,8 +205,9 @@ DEFINE_PRIM(hx_glfw_restoreWindow, 1);
 value hx_glfw_windowShouldClose(value v) {
     return alloc<bool>(glfwWindowShouldClose((GLFWwindow*)val_data(v)));
 }
-void hx_glfw_setWindowShouldClose(value v, value val) {
+value hx_glfw_setWindowShouldClose(value v, value val) {
     glfwSetWindowShouldClose((GLFWwindow*)val_data(v), val_get<bool>(val));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_windowShouldClose,    1);
 DEFINE_PRIM(hx_glfw_setWindowShouldClose, 2);
@@ -187,11 +216,13 @@ DEFINE_PRIM(hx_glfw_setWindowShouldClose, 2);
 // glfwPollEvents
 // glfwWaitEvents
 //
-void hx_glfw_pollEvents() {
+value hx_glfw_pollEvents() {
     glfwPollEvents();
+    return val_null;
 }
-void hx_glfw_waitEvents() {
+value hx_glfw_waitEvents() {
     glfwWaitEvents();
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_pollEvents, 0);
 DEFINE_PRIM(hx_glfw_waitEvents, 0);
@@ -205,42 +236,30 @@ DEFINE_PRIM(hx_glfw_waitEvents, 0);
 // glfwSetWindowFocusCallback
 // glfwSetWindowIconifyCallback
 //
-GLFWMULTIDECLARE(setWindowPosCallback);
-GLFWMULTIDECLARE(setWindowSizeCallback);
-GLFWMULTIDECLARE(setWindowRefreshCallback);
-GLFWMULTIDECLARE(setWindowCloseCallback);
-GLFWMULTIDECLARE(setWindowFocusCallback);
-GLFWMULTIDECLARE(setWindowIconifyCallback);
-void bound_setWindowPosCallback(GLFWwindow* v, int x, int y) {
-    value cb = GLFWMULTIFUNC(setWindowPosCallback, v);
-    val_call2(cb, alloc<int>(x), alloc<int>(y));
+extern "C" void bound_setWindowPosCallback(GLFWwindow* v, int x, int y, void* cb) {
+    val_call2((value)cb, alloc<int>(x), alloc<int>(y));
 }
-void bound_setWindowSizeCallback(GLFWwindow* v, int width, int height) {
-    value cb = GLFWMULTIFUNC(setWindowSizeCallback, v);
-    val_call2(cb, alloc<int>(width), alloc<int>(height));
+extern "C" void bound_setWindowSizeCallback(GLFWwindow* v, int width, int height, void* cb) {
+    val_call2((value)cb, alloc<int>(width), alloc<int>(height));
 }
-void bound_setWindowRefreshCallback(GLFWwindow* v) {
-    value cb = GLFWMULTIFUNC(setWindowRefreshCallback, v);
-    val_call0(cb);
+extern "C" void bound_setWindowRefreshCallback(GLFWwindow* v, void* cb) {
+    val_call0((value)cb);
 }
-void bound_setWindowCloseCallback(GLFWwindow* v) {
-    value cb = GLFWMULTIFUNC(setWindowCloseCallback, v);
-    val_call0(cb);
+extern "C" void bound_setWindowCloseCallback(GLFWwindow* v, void* cb) {
+    val_call0((value)cb);
 }
-void bound_setWindowFocusCallback(GLFWwindow* v, int focused) {
-    value cb = GLFWMULTIFUNC(setWindowFocusCallback, v);
-    val_call1(cb, alloc<bool>(focused));
+extern "C" void bound_setWindowFocusCallback(GLFWwindow* v, int focused, void* cb) {
+    val_call1((value)cb, alloc<bool>(focused));
 }
-void bound_setWindowIconifyCallback(GLFWwindow* v, int iconified) {
-    value cb = GLFWMULTIFUNC(setWindowIconifyCallback, v);
-    val_call1(cb, alloc<bool>(iconified));
+extern "C" void bound_setWindowIconifyCallback(GLFWwindow* v, int iconified, void* cb) {
+    val_call1((value)cb, alloc<bool>(iconified));
 }
-GLFWMULTIDEFINE(setWindowPosCallback,     SetWindowPosCallback);
-GLFWMULTIDEFINE(setWindowSizeCallback,    SetWindowSizeCallback);
-GLFWMULTIDEFINE(setWindowRefreshCallback, SetWindowRefreshCallback);
-GLFWMULTIDEFINE(setWindowCloseCallback,   SetWindowCloseCallback);
-GLFWMULTIDEFINE(setWindowFocusCallback,   SetWindowFocusCallback);
-GLFWMULTIDEFINE(setWindowIconifyCallback, SetWindowIconifyCallback);
+GLFWCALLBACK(setWindowPosCallback,     SetWindowPosCallback);
+GLFWCALLBACK(setWindowSizeCallback,    SetWindowSizeCallback);
+GLFWCALLBACK(setWindowRefreshCallback, SetWindowRefreshCallback);
+GLFWCALLBACK(setWindowCloseCallback,   SetWindowCloseCallback);
+GLFWCALLBACK(setWindowFocusCallback,   SetWindowFocusCallback);
+GLFWCALLBACK(setWindowIconifyCallback, SetWindowIconifyCallback);
 
 
 //
@@ -255,12 +274,14 @@ value hx_glfw_getKey(value v, value key) {
 value hx_glfw_getMouseButton(value v, value button) {
     return alloc<bool>(GLFW_PRESS == glfwGetMouseButton((GLFWwindow*)val_data(v), val_get<int>(button)));
 }
-void hx_glfw_getCursorPos(value v, value pos) {
+value hx_glfw_getCursorPos(value v, value pos) {
     double* vals = val_array_double(pos);
     glfwGetCursorPos((GLFWwindow*)val_data(v), vals, vals+1);
+    return val_null;
 }
-void hx_glfw_setCursorPos(value v, value x, value y) {
+value hx_glfw_setCursorPos(value v, value x, value y) {
     glfwSetCursorPos((GLFWwindow*)val_data(v), val_get<double>(x), val_get<double>(y));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_getKey,         2);
 DEFINE_PRIM(hx_glfw_getMouseButton, 2);
@@ -275,47 +296,35 @@ DEFINE_PRIM(hx_glfw_setCursorPos,   3);
 // glfwSetCursorPosCallback
 // glfwSetCursorEnterCallback
 //
-GLFWMULTIDECLARE(setKeyCallback);
-GLFWMULTIDECLARE(setCharCallback);
-GLFWMULTIDECLARE(setMouseButtonCallback);
-GLFWMULTIDECLARE(setScrollCallback);
-GLFWMULTIDECLARE(setCursorPosCallback);
-GLFWMULTIDECLARE(setCursorEnterCallback);
-void bound_setKeyCallback(GLFWwindow* v, int key, int scancode, int action, int mods) {
-    value cb = GLFWMULTIFUNC(setKeyCallback, v);
+void bound_setKeyCallback(GLFWwindow* v, int key, int scancode, int action, int mods, void* cb) {
     value args[4];
     args[0] = alloc<int>(key);
     args[1] = alloc<int>(scancode);
     args[2] = alloc<int>(action);
     args[3] = alloc<int>(mods);
-    val_callN(cb, args, 4);
+    val_callN((value)cb, args, 4);
 }
-void bound_setCharCallback(GLFWwindow* v, unsigned int character) {
-    value cb = GLFWMULTIFUNC(setCharCallback, v);
-    val_call1(cb, alloc<int>(character));
+void bound_setCharCallback(GLFWwindow* v, unsigned int character, void* cb) {
+    val_call1((value)cb, alloc<int>(character));
 }
-void bound_setMouseButtonCallback(GLFWwindow* v, int button, int pressed, int mods) {
-    value cb = GLFWMULTIFUNC(setMouseButtonCallback, v);
-    val_call3(cb, alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS), alloc<int>(mods));
+void bound_setMouseButtonCallback(GLFWwindow* v, int button, int pressed, int mods, void* cb) {
+    val_call3((value)cb, alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS), alloc<int>(mods));
 }
-void bound_setScrollCallback(GLFWwindow* v, double x, double y) {
-    value cb = GLFWMULTIFUNC(setScrollCallback, v);
-    val_call2(cb, alloc<double>(x), alloc<double>(y));
+void bound_setScrollCallback(GLFWwindow* v, double x, double y, void* cb) {
+    val_call2((value)cb, alloc<double>(x), alloc<double>(y));
 }
-void bound_setCursorPosCallback(GLFWwindow* v, double x, double y) {
-    value cb = GLFWMULTIFUNC(setCursorPosCallback, v);
-    val_call2(cb, alloc<double>(x), alloc<double>(y));
+void bound_setCursorPosCallback(GLFWwindow* v, double x, double y, void* cb) {
+    val_call2((value)cb, alloc<double>(x), alloc<double>(y));
 }
-void bound_setCursorEnterCallback(GLFWwindow* v, int enter) {
-    value cb = GLFWMULTIFUNC(setCursorEnterCallback, v);
-    val_call1(cb, alloc<bool>(enter));
+void bound_setCursorEnterCallback(GLFWwindow* v, int enter, void* cb) {
+    val_call1((value)cb, alloc<bool>(enter));
 }
-GLFWMULTIDEFINE(setKeyCallback, SetKeyCallback);
-GLFWMULTIDEFINE(setCharCallback, SetCharCallback);
-GLFWMULTIDEFINE(setMouseButtonCallback, SetMouseButtonCallback);
-GLFWMULTIDEFINE(setScrollCallback, SetScrollCallback);
-GLFWMULTIDEFINE(setCursorPosCallback, SetCursorPosCallback);
-GLFWMULTIDEFINE(setCursorEnterCallback, SetCursorEnterCallback);
+GLFWCALLBACK(setKeyCallback, SetKeyCallback);
+GLFWCALLBACK(setCharCallback, SetCharCallback);
+GLFWCALLBACK(setMouseButtonCallback, SetMouseButtonCallback);
+GLFWCALLBACK(setScrollCallback, SetScrollCallback);
+GLFWCALLBACK(setCursorPosCallback, SetCursorPosCallback);
+GLFWCALLBACK(setCursorEnterCallback, SetCursorEnterCallback);
 
 
 //
@@ -325,8 +334,9 @@ GLFWMULTIDEFINE(setCursorEnterCallback, SetCursorEnterCallback);
 value hx_glfw_getTime() {
     return alloc<double>(glfwGetTime());
 }
-void hx_glfw_setTime(value time) {
+value hx_glfw_setTime(value time) {
     glfwSetTime(val_get<double>(time));
+    return val_null;
 }
 DEFINE_PRIM(hx_glfw_getTime, 0);
 DEFINE_PRIM(hx_glfw_setTime, 1);

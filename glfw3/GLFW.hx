@@ -31,7 +31,10 @@ class GLFW implements GLProcs {
         return Lib.load("glfw3","hx_glfw_"+n, p);
 
 
-    @:GLProc function setErrorCallback(cb:Null<Int->String->Void>):Void;
+    public static inline function setErrorCallback(cb:Null<Int->String->Void>):Void {
+        #if neko nekoinit(); #end
+        load("setErrorCallback", 1)(cb);
+    }
 
     public static inline var NOT_INITIALIZED      =0x00070001;
     public static inline var NO_CURRENT_CONTEXT   =0x00070002;
@@ -43,7 +46,20 @@ class GLFW implements GLProcs {
     public static inline var PLATFORM_ERROR       =0x00070008;
     public static inline var FORMAT_UNAVAILABLE   =0x00070009;
 
-    @:GLProc function init():Void;
+#if neko
+    static var hasinit = false;
+    static function nekoinit() {
+        if (hasinit) return;
+        hasinit = true;
+        var i = Lib.load("glfw3","neko_init",5);
+        if (i != null)
+            i(function(s)return new String(s),function(len:Int){var r=[];if(len>0)r[len-1]=null;return r;},null,true,false);
+    }
+#end
+    public static inline function init():Void {
+        #if neko nekoinit(); #end
+        load("init", 0)();
+    }
     @:GLProc function terminate():Void;
 
     @:GLProc function getMonitors():Array<Monitor> {

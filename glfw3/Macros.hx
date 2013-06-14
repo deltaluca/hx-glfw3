@@ -158,6 +158,23 @@ class GLProcsImpl {
             if (f.ret != null) {
                 f.expr = transformRet(f.expr, f.ret);
             }
+/*
+            if (f.ret == null || switch (f.ret) {
+                case macro :Void: true;
+                default: false;
+            })
+                f.expr = macro {
+                    ${if (Context.defined("cpp")) macro cpp.vm.Gc.enterGCFreeZone() else macro {}};
+                    ${f.expr};
+                    ${if (Context.defined("cpp")) macro cpp.vm.Gc.exitGCFreeZone() else macro {}};
+                };
+            else
+                f.expr = macro {
+                    ${if (Context.defined("cpp")) macro cpp.vm.Gc.enterGCFreeZone() else macro {}};
+                    var ret = (function () ${f.expr})();
+                    ${if (Context.defined("cpp")) macro cpp.vm.Gc.exitGCFreeZone() else macro {}};
+                    return ret;
+                };*/
         }
         else {
             f.expr.expr = switch (f.expr.expr) {

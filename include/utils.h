@@ -90,46 +90,4 @@ void finaliser(value v) {
     PGETPROP(P, N, M, I); \
     PSETPROP(P, N, M, I)
 
-
-// GLFW single version callbacks
-#define GLFWCALLBACK(N, G, P) \
-    void hx_glfw_##N(value cbfun) { \
-        if (hx_##N != NULL) { \
-            delete hx_##N; \
-            hx_##N = NULL; \
-        } \
-        if (val_is_null(cbfun)) \
-            glfw##G(NULL); \
-        else { \
-            /*val_check_function(cbfun, P);*/ \
-            hx_##N = new AutoGCRoot(cbfun); \
-            glfw##G(bound_##N); \
-        } \
-    } \
-    DEFINE_PRIM(hx_glfw_##N, 1)
-
-#include <map>
-
-// GLFW multiple version callbacks
-#define GLFWMULTIDECLARE(N) \
-    std::map<GLFWwindow*, AutoGCRoot*> hx_##N##_cbs
-#define GLFWMULTIFUNC(N, w) \
-    hx_##N##_cbs[w]->get()
-#define GLFWMULTIDEFINE(N, G) \
-    void hx_glfw_##N(value v, value cbfun) { \
-        GLFWwindow* w = (GLFWwindow*)val_data(v); \
-        if (hx_##N##_cbs.find(w) != hx_##N##_cbs.end()) { \
-            delete hx_##N##_cbs[w]; \
-            hx_##N##_cbs[w] = NULL; \
-        } \
-        if (val_is_null(cbfun)) { \
-            glfw##G(w, NULL); \
-        } \
-        else { \
-            hx_##N##_cbs[w] = new AutoGCRoot(cbfun); \
-            glfw##G(w, bound_##N); \
-        } \
-    } \
-    DEFINE_PRIM(hx_glfw_##N, 2)
-
 #endif
