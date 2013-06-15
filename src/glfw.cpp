@@ -2,9 +2,14 @@
 #include "utils.h"
 #define CONST(N) PCONST(glfw, GLFW, N)
 
-#define GLFWCALLBACK(N, G) \
+
+#define CALLBACK(N, G) \
     value hx_glfw_##N(value window, value cbfun) { \
-        glfw##G((GLFWwindow*)val_data(window), bound_##N, cbfun); \
+        AutoGCRoot* prev = NULL; \
+        if (val_is_null(cbfun)) \
+             prev = (AutoGCRoot*)glfw##G((GLFWwindow*)val_data(window), NULL, NULL); \
+        else prev = (AutoGCRoot*)glfw##G((GLFWwindow*)val_data(window), bound_##N, new AutoGCRoot(cbfun)); \
+        if (prev != NULL) delete[] prev; \
         return val_null; \
     } \
     DEFINE_PRIM(hx_glfw_##N, 2)
@@ -254,12 +259,12 @@ extern "C" void bound_setWindowFocusCallback(GLFWwindow* v, int focused, void* c
 extern "C" void bound_setWindowIconifyCallback(GLFWwindow* v, int iconified, void* cb) {
     val_call1((value)cb, alloc<bool>(iconified));
 }
-GLFWCALLBACK(setWindowPosCallback,     SetWindowPosCallback);
-GLFWCALLBACK(setWindowSizeCallback,    SetWindowSizeCallback);
-GLFWCALLBACK(setWindowRefreshCallback, SetWindowRefreshCallback);
-GLFWCALLBACK(setWindowCloseCallback,   SetWindowCloseCallback);
-GLFWCALLBACK(setWindowFocusCallback,   SetWindowFocusCallback);
-GLFWCALLBACK(setWindowIconifyCallback, SetWindowIconifyCallback);
+CALLBACK(setWindowPosCallback,     SetWindowPosCallback);
+CALLBACK(setWindowSizeCallback,    SetWindowSizeCallback);
+CALLBACK(setWindowRefreshCallback, SetWindowRefreshCallback);
+CALLBACK(setWindowCloseCallback,   SetWindowCloseCallback);
+CALLBACK(setWindowFocusCallback,   SetWindowFocusCallback);
+CALLBACK(setWindowIconifyCallback, SetWindowIconifyCallback);
 
 
 //
@@ -302,7 +307,7 @@ void bound_setKeyCallback(GLFWwindow* v, int key, int scancode, int action, int 
     args[1] = alloc<int>(scancode);
     args[2] = alloc<int>(action);
     args[3] = alloc<int>(mods);
-    val_callN((value)cb, args, 4);
+    val_callN(((AutoGCRoot*)cb)->get(), args, 4);
 }
 void bound_setCharCallback(GLFWwindow* v, unsigned int character, void* cb) {
     val_call1((value)cb, alloc<int>(character));
@@ -319,13 +324,12 @@ void bound_setCursorPosCallback(GLFWwindow* v, double x, double y, void* cb) {
 void bound_setCursorEnterCallback(GLFWwindow* v, int enter, void* cb) {
     val_call1((value)cb, alloc<bool>(enter));
 }
-GLFWCALLBACK(setKeyCallback, SetKeyCallback);
-GLFWCALLBACK(setCharCallback, SetCharCallback);
-GLFWCALLBACK(setMouseButtonCallback, SetMouseButtonCallback);
-GLFWCALLBACK(setScrollCallback, SetScrollCallback);
-GLFWCALLBACK(setCursorPosCallback, SetCursorPosCallback);
-GLFWCALLBACK(setCursorEnterCallback, SetCursorEnterCallback);
-
+CALLBACK(setKeyCallback, SetKeyCallback);
+CALLBACK(setCharCallback, SetCharCallback);
+CALLBACK(setMouseButtonCallback, SetMouseButtonCallback);
+CALLBACK(setScrollCallback, SetScrollCallback);
+CALLBACK(setCursorPosCallback, SetCursorPosCallback);
+CALLBACK(setCursorEnterCallback, SetCursorEnterCallback);
 
 //
 // glfwGetTime
