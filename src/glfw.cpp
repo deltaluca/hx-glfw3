@@ -7,7 +7,7 @@
         glfw##G((GLFWwindow*)val_data(window), bound_##N, cbfun); \
         return val_null; \
     } \
-    DEFINE_PRIM(hx_glfw_##N, 1)
+    DEFINE_PRIM(hx_glfw_##N, 2)
 
 DECLARE_KIND(k_Monitor);
 DECLARE_KIND(k_Window);
