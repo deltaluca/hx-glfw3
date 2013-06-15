@@ -149,13 +149,17 @@ DEFINE_PRIM(hx_glfw_getWindowAttrib, 2);
 //glfwSetWindowTitle
 //
 value hx_glfw_getWindowPos(value v, value size) {
-    int* vals = val_array_int(size);
-    glfwGetWindowPos((GLFWwindow*)val_data(v), vals, vals+1);
+    int x, y;
+    glfwGetWindowPos((GLFWwindow*)val_data(v), &x, &y);
+    val_array_set_i(v, 0, alloc<int>(x));
+    val_array_set_i(v, 1, alloc<int>(y));
     return val_null;
 }
 value hx_glfw_getWindowSize(value v, value size) {
-    int* vals = val_array_int(size);
-    glfwGetWindowSize((GLFWwindow*)val_data(v), vals, vals+1);
+    int x, y;
+    glfwGetWindowSize((GLFWwindow*)val_data(v), &x, &y);
+    val_array_set_i(v, 0, alloc<int>(x));
+    val_array_set_i(v, 1, alloc<int>(y));
     return val_null;
 }
 value hx_glfw_setWindowPos(value v, value x, value y) {
@@ -280,8 +284,10 @@ value hx_glfw_getMouseButton(value v, value button) {
     return alloc<bool>(GLFW_PRESS == glfwGetMouseButton((GLFWwindow*)val_data(v), val_get<int>(button)));
 }
 value hx_glfw_getCursorPos(value v, value pos) {
-    double* vals = val_array_double(pos);
-    glfwGetCursorPos((GLFWwindow*)val_data(v), vals, vals+1);
+    double x; double y;
+    glfwGetCursorPos((GLFWwindow*)val_data(v), &x, &y);
+    val_array_set_i(v, 0, alloc<double>(x));
+    val_array_set_i(v, 1, alloc<double>(y));
     return val_null;
 }
 value hx_glfw_setCursorPos(value v, value x, value y) {
