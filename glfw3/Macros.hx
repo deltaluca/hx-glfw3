@@ -183,7 +183,7 @@ class GLProcsImpl {
                 for (x in xs) {
                     switch (x.expr) {
                     case EMeta({name:":GLCheck", params:params, pos:p}, y):
-                        if (!Context.defined("debug")) continue;
+                        if (!Context.defined("debug") || true) continue;
                         if (params.length > 1) {
                             for (n in params) {
                                 skipped.set(switch (n.expr) {
@@ -211,7 +211,7 @@ class GLProcsImpl {
         }
 
         var checks = [];
-        if (Context.defined("debug")) {
+        if (Context.defined("debug") && false) {
             for (arg in f.args) {
                 if (arg.type == null) Context.warning("@:GLProc should have arg types declared", field.pos);
                 if (arg.opt || skippedType(arg.type)) continue;

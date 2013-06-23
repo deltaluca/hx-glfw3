@@ -124,13 +124,11 @@ class GLFW implements GLProcs {
     @:GLProc function getWindowAttrib(window:Window, param:Int):Int;
 
     @:GLProc function getWindowPos(window:Window):{x:Int, y:Int} {
-        var vals = [0,0];
-        load("getWindowPos", 2)(NativeBinding.native(window), vals);
+        var vals = load("getWindowPos", 2)(NativeBinding.native(window), [0,0]);
         return {x:vals[0], y:vals[1]};
     }
     @:GLProc function getWindowSize(window:Window):{width:Int, height:Int} {
-        var vals = [0,0];
-        load("getWindowSize", 2)(NativeBinding.native(window), vals);
+        var vals = load("getWindowSize", 2)(NativeBinding.native(window), [0,0]);
         return {width:vals[0], height:vals[1]};
     }
     @:GLProc function setWindowPos(window:Window, x:Int, y:Int):Void;
@@ -177,8 +175,7 @@ class GLFW implements GLProcs {
     @:GLProc function getKey(window:Window, key:Int):Bool;
     @:GLProc function getMouseButton(window:Window, button:Int):Bool;
     @:GLProc function getCursorPos(window:Window):{x:Float, y:Float} {
-        var vals = [0.0,0.0];
-        load("getCursorPos", 2)(NativeBinding.native(window), vals);
+        var vals = load("getCursorPos", 2)(NativeBinding.native(window), [0.0,0.0]);
         return {x:vals[0], y:vals[1]};
     }
     @:GLProc function setCursorPos(window:Window, x:Float, y:Float):Void;

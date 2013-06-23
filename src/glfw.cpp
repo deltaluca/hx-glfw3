@@ -148,19 +148,19 @@ DEFINE_PRIM(hx_glfw_getWindowAttrib, 2);
 //glfwSetWindowSize
 //glfwSetWindowTitle
 //
-value hx_glfw_getWindowPos(value v, value size) {
+value hx_glfw_getWindowPos(value v, value pos) {
     int x, y;
     glfwGetWindowPos((GLFWwindow*)val_data(v), &x, &y);
-    val_array_set_i(v, 0, alloc<int>(x));
-    val_array_set_i(v, 1, alloc<int>(y));
-    return val_null;
+    val_array_set_i(pos, 0, alloc<int>(x));
+    val_array_set_i(pos, 1, alloc<int>(y));
+    return pos;
 }
 value hx_glfw_getWindowSize(value v, value size) {
     int x, y;
     glfwGetWindowSize((GLFWwindow*)val_data(v), &x, &y);
-    val_array_set_i(v, 0, alloc<int>(x));
-    val_array_set_i(v, 1, alloc<int>(y));
-    return val_null;
+    val_array_set_i(size, 0, alloc<int>(x));
+    val_array_set_i(size, 1, alloc<int>(y));
+    return size;
 }
 value hx_glfw_setWindowPos(value v, value x, value y) {
     glfwSetWindowPos((GLFWwindow*)val_data(v), val_get<int>(x), val_get<int>(y));
@@ -246,22 +246,22 @@ DEFINE_PRIM(hx_glfw_waitEvents, 0);
 // glfwSetWindowIconifyCallback
 //
 extern "C" void bound_setWindowPosCallback(GLFWwindow* v, int x, int y, void* cb) {
-    val_call2((value)cb, alloc<int>(x), alloc<int>(y));
+    val_call2(((AutoGCRoot*)cb)->get(), alloc<int>(x), alloc<int>(y));
 }
 extern "C" void bound_setWindowSizeCallback(GLFWwindow* v, int width, int height, void* cb) {
-    val_call2((value)cb, alloc<int>(width), alloc<int>(height));
+    val_call2(((AutoGCRoot*)cb)->get(), alloc<int>(width), alloc<int>(height));
 }
 extern "C" void bound_setWindowRefreshCallback(GLFWwindow* v, void* cb) {
-    val_call0((value)cb);
+    val_call0(((AutoGCRoot*)cb)->get());
 }
 extern "C" void bound_setWindowCloseCallback(GLFWwindow* v, void* cb) {
-    val_call0((value)cb);
+    val_call0(((AutoGCRoot*)cb)->get());
 }
 extern "C" void bound_setWindowFocusCallback(GLFWwindow* v, int focused, void* cb) {
-    val_call1((value)cb, alloc<bool>(focused));
+    val_call1(((AutoGCRoot*)cb)->get(), alloc<bool>(focused));
 }
 extern "C" void bound_setWindowIconifyCallback(GLFWwindow* v, int iconified, void* cb) {
-    val_call1((value)cb, alloc<bool>(iconified));
+    val_call1(((AutoGCRoot*)cb)->get(), alloc<bool>(iconified));
 }
 CALLBACK(setWindowPosCallback,     SetWindowPosCallback);
 CALLBACK(setWindowSizeCallback,    SetWindowSizeCallback);
@@ -286,9 +286,9 @@ value hx_glfw_getMouseButton(value v, value button) {
 value hx_glfw_getCursorPos(value v, value pos) {
     double x; double y;
     glfwGetCursorPos((GLFWwindow*)val_data(v), &x, &y);
-    val_array_set_i(v, 0, alloc<double>(x));
-    val_array_set_i(v, 1, alloc<double>(y));
-    return val_null;
+    val_array_set_i(pos, 0, alloc<double>(x));
+    val_array_set_i(pos, 1, alloc<double>(y));
+    return pos;
 }
 value hx_glfw_setCursorPos(value v, value x, value y) {
     glfwSetCursorPos((GLFWwindow*)val_data(v), val_get<double>(x), val_get<double>(y));
@@ -316,19 +316,19 @@ void bound_setKeyCallback(GLFWwindow* v, int key, int scancode, int action, int 
     val_callN(((AutoGCRoot*)cb)->get(), args, 4);
 }
 void bound_setCharCallback(GLFWwindow* v, unsigned int character, void* cb) {
-    val_call1((value)cb, alloc<int>(character));
+    val_call1(((AutoGCRoot*)cb)->get(), alloc<int>(character));
 }
 void bound_setMouseButtonCallback(GLFWwindow* v, int button, int pressed, int mods, void* cb) {
-    val_call3((value)cb, alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS), alloc<int>(mods));
+    val_call3(((AutoGCRoot*)cb)->get(), alloc<int>(button), alloc<bool>(pressed == GLFW_PRESS), alloc<int>(mods));
 }
 void bound_setScrollCallback(GLFWwindow* v, double x, double y, void* cb) {
-    val_call2((value)cb, alloc<double>(x), alloc<double>(y));
+    val_call2(((AutoGCRoot*)cb)->get(), alloc<double>(x), alloc<double>(y));
 }
 void bound_setCursorPosCallback(GLFWwindow* v, double x, double y, void* cb) {
-    val_call2((value)cb, alloc<double>(x), alloc<double>(y));
+    val_call2(((AutoGCRoot*)cb)->get(), alloc<double>(x), alloc<double>(y));
 }
 void bound_setCursorEnterCallback(GLFWwindow* v, int enter, void* cb) {
-    val_call1((value)cb, alloc<bool>(enter));
+    val_call1(((AutoGCRoot*)cb)->get(), alloc<bool>(enter));
 }
 CALLBACK(setKeyCallback, SetKeyCallback);
 CALLBACK(setCharCallback, SetCharCallback);
